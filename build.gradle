@@ -1,11 +1,8 @@
 plugins {
-    id 'java'
+    id("java")
     id("com.gradleup.shadow").version("9.0.0-beta4")
     id("io.papermc.paperweight.userdev").version("2.0.0-beta.16")
 }
-
-group = 'su.starlight'
-version = '1.0-SNAPSHOT'
 
 configurations {
     shade
@@ -49,17 +46,26 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
-processResources {
-    def props = [version: version]
-    inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
-        expand props
+tasks {
+    shadowJar {
+        configurations = [project.configurations.shade]
+        archiveClassifier = ""
+    }
+
+    jar {
+        enabled = false
+    }
+
+    build {
+        dependsOn(shadowJar)
+    }
+
+    processResources {
+        def props = [version: version]
+        inputs.properties props
+        filteringCharset 'UTF-8'
+        filesMatching('plugin.yml') {
+            expand props
+        }
     }
 }
-
-shadowJar {
-    configurations = [project.configurations.shade]
-}
-
-tasks.build.dependsOn("shadowJar")
