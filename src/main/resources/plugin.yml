@@ -1,0 +1,4 @@
+name: DonationAlerts
+version: '1.0-SNAPSHOT'
+main: su.starlight.da.CorePlugin
+api-version: '1.21'
